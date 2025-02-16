@@ -1,0 +1,7 @@
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/OpenGL-Project.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/edit_cache.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/rebuild_cache.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/list_install_components.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/install.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/install/local.dir
+/Users/doqin/Projects/OpenGL-Project/build/CMakeFiles/install/strip.dir
