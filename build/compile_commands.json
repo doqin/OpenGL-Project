@@ -1,14 +1,20 @@
 [
 {
   "directory": "/Users/doqin/Projects/OpenGL-Project/build",
-  "command": "/usr/bin/clang++ -I/Users/doqin/Projects/OpenGL-Project/include -g -std=c++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wall -Wextra \"-Wpedantic>\" -o CMakeFiles/OpenGL-Project.dir/src/main.cpp.o -c /Users/doqin/Projects/OpenGL-Project/src/main.cpp",
+  "command": "/usr/bin/clang++ -I/Users/doqin/Projects/OpenGL-Project/include -O3 -DNDEBUG -std=c++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wall -Wextra \"-Wpedantic>\" -o CMakeFiles/OpenGL-Project.dir/src/main.cpp.o -c /Users/doqin/Projects/OpenGL-Project/src/main.cpp",
   "file": "/Users/doqin/Projects/OpenGL-Project/src/main.cpp",
   "output": "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o"
 },
 {
   "directory": "/Users/doqin/Projects/OpenGL-Project/build",
-  "command": "/usr/bin/clang -I/Users/doqin/Projects/OpenGL-Project/include -g -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wall -Wextra \"-Wpedantic>\" -o CMakeFiles/OpenGL-Project.dir/src/glad.c.o -c /Users/doqin/Projects/OpenGL-Project/src/glad.c",
+  "command": "/usr/bin/clang -I/Users/doqin/Projects/OpenGL-Project/include -O3 -DNDEBUG -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wall -Wextra \"-Wpedantic>\" -o CMakeFiles/OpenGL-Project.dir/src/glad.c.o -c /Users/doqin/Projects/OpenGL-Project/src/glad.c",
   "file": "/Users/doqin/Projects/OpenGL-Project/src/glad.c",
   "output": "CMakeFiles/OpenGL-Project.dir/src/glad.c.o"
+},
+{
+  "directory": "/Users/doqin/Projects/OpenGL-Project/build",
+  "command": "/usr/bin/clang++ -I/Users/doqin/Projects/OpenGL-Project/include -O3 -DNDEBUG -std=c++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wall -Wextra \"-Wpedantic>\" -o CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o -c /Users/doqin/Projects/OpenGL-Project/src/readFile.cpp",
+  "file": "/Users/doqin/Projects/OpenGL-Project/src/readFile.cpp",
+  "output": "CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o"
 }
 ]

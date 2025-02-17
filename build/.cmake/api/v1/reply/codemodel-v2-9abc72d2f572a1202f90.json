@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-7a24317f66a8137de1dc.json",
+					"jsonFile" : "directory-.-Release-e5e807c49ecd7ecbb4ab.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.15"
@@ -20,7 +20,7 @@
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -40,7 +40,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "OpenGL-Project::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-OpenGL-Project-Debug-db718d85297dc51ed5ac.json",
+					"jsonFile" : "target-OpenGL-Project-Release-3b81ca73bfd767986fd4.json",
 					"name" : "OpenGL-Project",
 					"projectIndex" : 0
 				}

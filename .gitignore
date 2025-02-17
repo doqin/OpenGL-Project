@@ -5,3 +5,5 @@
 *.lo
 *.o
 *.obj
+
+./build

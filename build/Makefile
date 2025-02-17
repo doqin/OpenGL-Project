@@ -222,6 +222,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OpenGL-Project.dir/build.make CMakeFiles/OpenGL-Project.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/readFile.o: src/readFile.cpp.o
+.PHONY : src/readFile.o
+
+# target to build an object file
+src/readFile.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OpenGL-Project.dir/build.make CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o
+.PHONY : src/readFile.cpp.o
+
+src/readFile.i: src/readFile.cpp.i
+.PHONY : src/readFile.i
+
+# target to preprocess a source file
+src/readFile.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OpenGL-Project.dir/build.make CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.i
+.PHONY : src/readFile.cpp.i
+
+src/readFile.s: src/readFile.cpp.s
+.PHONY : src/readFile.s
+
+# target to generate assembly for a file
+src/readFile.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OpenGL-Project.dir/build.make CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.s
+.PHONY : src/readFile.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -241,6 +265,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/readFile.o"
+	@echo "... src/readFile.i"
+	@echo "... src/readFile.s"
 .PHONY : help
 
 

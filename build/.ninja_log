@@ -1,0 +1,9 @@
+# ninja log v6
+1	372	1739779349452741167	CMakeFiles/OpenGL-Project.dir/src/glad.c.o	bc8c05b3ae9c3151
+809	1072	1739781885416180512	OpenGL-Project	d8bbaa5cc5cfde51
+6	809	1739781884612897916	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
+24	826	1739781403088933652	CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o	63d79a8eeaaa2197
+27	775	1739782017139271210	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	7a5a8110d34e4624
+27	828	1739782017139772947	CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o	9f9c80e1ff72abe5
+27	2000	1739782017139609076	CMakeFiles/OpenGL-Project.dir/src/glad.c.o	f1d7452199f5460c
+2000	2134	1739782019111887346	OpenGL-Project.app/Contents/MacOS/OpenGL-Project	29836041af6248dd

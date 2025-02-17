@@ -15,6 +15,9 @@ set(LIBRARIES_DIR ${PROJECT_SOURCE_DIR}/lib)
 add_executable( ${PROJECT_NAME}
   src/main.cpp
   src/glad.c
+  src/shaders/vertexShader.glsl
+  src/shaders/fragmentShader.glsl
+  src/readFile.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -25,7 +28,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
 )
 
-if(APPLE)
+if(APPLE AND CMAKE_BUILD_TYPE STREQUAL "Release")
   set_target_properties(${PROJECT_NAME}
     PROPERTIES MACOSX_BUNDLE TRUE)
 endif()

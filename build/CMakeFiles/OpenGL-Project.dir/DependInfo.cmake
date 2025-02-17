@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/doqin/Projects/OpenGL-Project/src/glad.c" "CMakeFiles/OpenGL-Project.dir/src/glad.c.o" "gcc" "CMakeFiles/OpenGL-Project.dir/src/glad.c.o.d"
   "/Users/doqin/Projects/OpenGL-Project/src/main.cpp" "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o" "gcc" "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o.d"
+  "/Users/doqin/Projects/OpenGL-Project/src/readFile.cpp" "CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o" "gcc" "CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
