@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(LIBRARIES_DIR ${PROJECT_SOURCE_DIR}/lib)
 
-
 add_executable( ${PROJECT_NAME}
   src/main.cpp
   src/glad.c
@@ -26,19 +25,24 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
 )
 
+if(APPLE)
+  set_target_properties(${PROJECT_NAME}
+    PROPERTIES MACOSX_BUNDLE TRUE)
+endif()
+
 # Compiler warning
 if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        /W4>
-    )
+  target_compile_options(${PROJECT_NAME} PRIVATE
+    /W4>)
 else()
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        -Wall -Wextra -Wpedantic>
-    )
+  target_compile_options(${PROJECT_NAME} PRIVATE
+    -Wall -Wextra -Wpedantic>)
 endif()
+
 
 # Installation rules
 install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION bin
+  BUNDLE DESTINATION build
+  RUNTIME DESTINATION bin
 )
 

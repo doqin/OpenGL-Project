@@ -3,7 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGL-Project.dir/src/glad.c.o.d"
   "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o"
   "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o.d"
-  "OpenGL-Project"
+  "OpenGL-Project.app/Contents/MacOS/OpenGL-Project"
   "OpenGL-Project.pdb"
 )
 
