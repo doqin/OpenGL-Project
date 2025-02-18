@@ -5,5 +5,3 @@
 *.lo
 *.o
 *.obj
-
-./build

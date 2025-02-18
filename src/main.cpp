@@ -105,9 +105,6 @@ int main() {
   // Delete the shaders as they are linked to the shader program
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
-  
-  // Set OpenGL's viewport
-  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
   // Triangle's vertices
   float vertices[] = {
@@ -161,6 +158,8 @@ int main() {
   // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
   glEnableVertexAttribArray(0);
 
+  // Set OpenGL's viewport
+  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
   // 
   // Render loop
@@ -170,13 +169,26 @@ int main() {
     // Input
     processInput(window);
 
+    //
     // Render commands
+    //
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw the triangle
+
+    // Activate the shader program
     glUseProgram(shaderProgram);
+    // Update the uniform color
+    float timeValue = glfwGetTime();
+    float redValue = (sin(timeValue) / 2.0f) + 0.5f;
+    float greenValue = (sin(timeValue / 3.0f) / 2.0f) + 0.5f;
+    float blueValue = (sin(timeValue * 2.0f / 3.0f) / 2.0f) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
+    // Render the triangle
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 

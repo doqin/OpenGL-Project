@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "Release")
+    set(CMAKE_INSTALL_CONFIG_NAME "Debug")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -38,12 +38,15 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/build" TYPE DIRECTORY FILES "/Users/doqin/Projects/OpenGL-Project/build/OpenGL-Project.app" USE_SOURCE_PERMISSIONS)
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/build/OpenGL-Project.app/Contents/MacOS/OpenGL-Project" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/build/OpenGL-Project.app/Contents/MacOS/OpenGL-Project")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/doqin/Projects/OpenGL-Project/build/OpenGL-Project")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OpenGL-Project" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OpenGL-Project")
     execute_process(COMMAND /usr/bin/install_name_tool
       -delete_rpath "/Users/doqin/Projects/OpenGL-Project/lib"
-      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/build/OpenGL-Project.app/Contents/MacOS/OpenGL-Project")
+      "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OpenGL-Project")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" -u -r "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OpenGL-Project")
+    endif()
   endif()
 endif()
 

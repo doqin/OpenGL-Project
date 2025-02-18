@@ -27,13 +27,10 @@
 		{
 			"backtrace" : 1,
 			"component" : "Unspecified",
-			"destination" : "build",
+			"destination" : "bin",
 			"paths" : 
 			[
-				{
-					"from" : "OpenGL-Project.app",
-					"to" : "OpenGL-Project.app/Contents/MacOS/OpenGL-Project"
-				}
+				"OpenGL-Project"
 			],
 			"targetId" : "OpenGL-Project::@6890427a1f51a3e7e1df",
 			"targetIndex" : 0,

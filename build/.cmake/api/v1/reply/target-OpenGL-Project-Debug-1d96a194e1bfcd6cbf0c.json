@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "OpenGL-Project.app/Contents/MacOS/OpenGL-Project"
+			"path" : "OpenGL-Project"
 		}
 	],
 	"backtrace" : 1,
@@ -63,7 +63,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -DNDEBUG -std=c++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk"
+					"fragment" : "-g -std=c++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk"
 				},
 				{
 					"backtrace" : 4,
@@ -104,7 +104,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -DNDEBUG -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk"
+					"fragment" : "-g -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk"
 				},
 				{
 					"backtrace" : 4,
@@ -148,7 +148,7 @@
 		[
 			{
 				"backtrace" : 2,
-				"path" : "build"
+				"path" : "bin"
 			}
 		],
 		"prefix" : 
@@ -161,7 +161,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-O3 -DNDEBUG",
+				"fragment" : "-g",
 				"role" : "flags"
 			},
 			{
