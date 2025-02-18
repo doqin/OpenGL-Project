@@ -17,6 +17,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 int main() {
+  // Set the function to flip the image vertically
+  stbi_set_flip_vertically_on_load(true);
 
   glfwInit(); // Initialize GLFW
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // Configure GLFW to use OpenGL version 3.X
@@ -51,11 +53,17 @@ int main() {
 
   // Triangle's vertices
   float vertices[] = {
-    // positions                  // colors
-    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f // top left
+    // positions                  // colors                   // texture coords
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,// top right
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// bottom left
+    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
+  };
+
+  // Indices of the vertices
+  unsigned int indices[] = {
+    0, 1, 3, // first triangle
+    1, 2, 3 // second triangle
   };
 
   // 
@@ -66,17 +74,18 @@ int main() {
   glGenTextures(1, &texture);
   // Bind the texture
   glBindTexture(GL_TEXTURE_2D, texture);
-  // Set texture filtering
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); // nearest neighbor interpolation
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // linear interpolation
   // Set the texture wrapping parameters
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // Set texture filtering
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); // nearest neighbor interpolation
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // linear interpolation
   // Load image
   int width, height, nrChannels;
   unsigned char* data = stbi_load("../asset/textures/kotori_pfp.png", &width, &height, &nrChannels, 0);
   
   if (data) {
+    std::cout << "Texture loaded successfully: " << width << "x" << height << " with " << nrChannels << " channels\n";
     // Generate texture
     // Parameters:
     // 1. The texture target, GL_TEXTURE_2D is a 2D texture, any texture bound to this target will be a 2D texture
@@ -88,7 +97,7 @@ int main() {
     // 7. The format of the pixel data
     // 8. The data type of the pixel data
     // 9. The image data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     // Generate mipmaps
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
@@ -97,37 +106,22 @@ int main() {
   // Free the image data
   stbi_image_free(data);
 
-  // Generate Vertex Array Object
-  unsigned int VAO;
+  unsigned int VAO, VBO, EBO;
+  // Generate 1 of the VAO
   glGenVertexArrays(1, &VAO);
-
-  // Bind the Vertex Array Object
   glBindVertexArray(VAO);
-
-  // 
-  // Preparing for the Vertex shader
-  //
-
-  // 1. Create memory on GPU where to store the vertex data
-
-  // Generate Vertex Buffer Object
-  unsigned int VBO;
   // Generate 1 of the VBO
   glGenBuffers(1, &VBO);
-
-  // 2. Configure how OpenGL should interpret the memory
-
-  // Bind buffer of Array Buffer type, the buffer type of a vertex buffer Object
-  // is GL_ARRAY_BUFFER
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  // Generate 1 of the EBO
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-
-  // 3. Specify how to send the data to the graphics card
-
-  // Copies the previously defined vertex data into the bound buffer's memory
-  // which is VBO currently
+  // Copy the vertices to the buffer
   // GL_STATIC_DRAW means the data is set once and used many times
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  // Copy the indices to the buffer
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   // Position attribute
 
@@ -154,9 +148,6 @@ int main() {
   // Set OpenGL's viewport
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-  glShader.use();
-  glShader.setInt("ourTexture", 0);
-
   // 
   // Render loop
   //
@@ -173,13 +164,14 @@ int main() {
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Draw the triangle
     // Bind the texture
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    // Activate the shader program
+    // Use the shader program
     glShader.use();
+    glShader.setInt("ourTexture", 0);
+
     // Bind VAO to use the vertex data
     glBindVertexArray(VAO);
     // Draw the triangle
