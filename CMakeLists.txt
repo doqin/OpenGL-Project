@@ -15,9 +15,7 @@ set(LIBRARIES_DIR ${PROJECT_SOURCE_DIR}/lib)
 add_executable( ${PROJECT_NAME}
   src/main.cpp
   src/glad.c
-  src/shaders/vertexShader.glsl
-  src/shaders/fragmentShader.glsl
-  src/readFile.cpp
+  src/shaders/shader.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

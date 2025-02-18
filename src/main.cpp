@@ -1,11 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <readFile.hpp>
+#include <shader.hpp>
 #include <iostream>
-
-const std::string vertexShaderSource = readFile("shaders/vertexShader.glsl");
-const std::string fragmentShaderSource = readFile("shaders/fragmentShader.glsl");
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -44,67 +41,8 @@ int main() {
     std::cout << "Failed to initialize GLAD\n";
   }
 
-  // 
-  // Creating the vertex shader
-  //
-
-  // 1. Create a vertex shader
-  unsigned int vertexShader;
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-  // 2. Attach the shader source code to the shader object and compile the shader
-  const char* vertexShaderSourceCStr = vertexShaderSource.c_str();
-  glShaderSource(vertexShader, 1, &vertexShaderSourceCStr, NULL);
-  glCompileShader(vertexShader);
-
-  // 3. Check if the shader compilation was successful
-  int success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-  if (!success) {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-              << infoLog << std::endl;
-  }
-
-  // 
-  // Creating the fragment shader
-  // 
-
-  // Same 3 steps as the vertex shader
-  unsigned int fragmentShader;
-  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const char* fragmentShaderSourceCStr = fragmentShaderSource.c_str();
-  glShaderSource(fragmentShader, 1, &fragmentShaderSourceCStr, NULL);
-  glCompileShader(fragmentShader);
-
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-              << infoLog << std::endl;
-  }
-
-  //
-  // Creating the shader program
-  // 
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-              << infoLog << std::endl;
-  }
-
-  // Delete the shaders as they are linked to the shader program
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  // Create shader program
+  Shader glShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
 
   // Triangle's vertices
   float vertices[] = {
@@ -187,7 +125,7 @@ int main() {
     // Draw the triangle
 
     // Activate the shader program
-    glUseProgram(shaderProgram);
+    glShader.use();
     // Render the triangle
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -199,7 +137,6 @@ int main() {
   }
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
-  glDeleteProgram(shaderProgram);
 
   glfwTerminate();
   return 0;

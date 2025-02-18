@@ -1,5 +1,8 @@
 # ninja log v6
 4	461	1739894578182179125	CMakeFiles/OpenGL-Project.dir/src/glad.c.o	bc8c05b3ae9c3151
-786	924	1739894578964424445	OpenGL-Project	d8bbaa5cc5cfde51
-3	721	1739894578181136477	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
+710	839	1739897246026410033	OpenGL-Project	aeddbb13560f24
+6	710	1739897245323080183	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
 4	786	1739894578182388830	CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o	63d79a8eeaaa2197
+16	868	1739896909533639547	CMakeFiles/OpenGL-Project.dir/src/shaders/shader.cpp.o	7803699e17214042
+7	526	1739897467084553069	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
+526	690	1739897467603829155	OpenGL-Project	38d544fccc51f2e4
