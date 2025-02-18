@@ -1,5 +1,10 @@
+// OpenGL headers
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+// Image loading library
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include <shader.hpp>
 #include <iostream>
@@ -47,17 +52,56 @@ int main() {
   // Triangle's vertices
   float vertices[] = {
     // positions                  // colors
-    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f // top left
   };
 
+  // 
+  // Texture
+  //
 
+  unsigned int texture;
+  glGenTextures(1, &texture);
+  // Bind the texture
+  glBindTexture(GL_TEXTURE_2D, texture);
+  // Set texture filtering
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR); // nearest neighbor interpolation
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // linear interpolation
+  // Set the texture wrapping parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // Load image
+  int width, height, nrChannels;
+  unsigned char* data = stbi_load("../asset/textures/kotori_pfp.png", &width, &height, &nrChannels, 0);
+  
+  if (data) {
+    // Generate texture
+    // Parameters:
+    // 1. The texture target, GL_TEXTURE_2D is a 2D texture, any texture bound to this target will be a 2D texture
+    // 2. The mipmap level, 0 is the base level
+    // 3. The internal format of the texture, the number of color components in the texture
+    // 4. The width of the texture
+    // 5. The height of the texture
+    // 6. The border of the texture (must be 0 as of OpenGL 3.0)
+    // 7. The format of the pixel data
+    // 8. The data type of the pixel data
+    // 9. The image data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    // Generate mipmaps
+    glGenerateMipmap(GL_TEXTURE_2D);
+  } else {
+    std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD\n";
+  }
+  // Free the image data
+  stbi_image_free(data);
 
   // Generate Vertex Array Object
   unsigned int VAO;
   glGenVertexArrays(1, &VAO);
 
+  // Bind the Vertex Array Object
   glBindVertexArray(VAO);
 
   // 
@@ -95,16 +139,23 @@ int main() {
   // Fifth parameter is the stride of the data, the space between consecutive vertex attributes 
   // (can use 0 to let OpenGL determine the stride)
   // Sixth parameter is the offset of the data
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
   glEnableVertexAttribArray(0);
 
   // Color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
+
+  // Texture attribute
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  glEnableVertexAttribArray(2);
 
   // Set OpenGL's viewport
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+  glShader.use();
+  glShader.setInt("ourTexture", 0);
 
   // 
   // Render loop
@@ -123,17 +174,20 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw the triangle
+    // Bind the texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     // Activate the shader program
     glShader.use();
-    // Render the triangle
+    // Bind VAO to use the vertex data
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Draw the triangle
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Check and call events and swap buffers
     glfwPollEvents();
     glfwSwapBuffers(window);
-
   }
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
