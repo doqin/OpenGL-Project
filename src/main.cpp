@@ -108,9 +108,10 @@ int main() {
 
   // Triangle's vertices
   float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f
+    // positions                  // colors
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top
   };
 
 
@@ -146,6 +147,8 @@ int main() {
   // GL_STATIC_DRAW means the data is set once and used many times
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+  // Position attribute
+
   // Tell OpenGL how to interpret the vertex data
   // First parameter is the location of the vertex attribute in the vertex shader (layout (location = 0))
   // Second parameter is the size of the vertex attribute (vec3 has 3 values x, y, z so it is 3)
@@ -154,9 +157,13 @@ int main() {
   // Fifth parameter is the stride of the data, the space between consecutive vertex attributes 
   // (can use 0 to let OpenGL determine the stride)
   // Sixth parameter is the offset of the data
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
   glEnableVertexAttribArray(0);
+
+  // Color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   // Set OpenGL's viewport
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -181,13 +188,6 @@ int main() {
 
     // Activate the shader program
     glUseProgram(shaderProgram);
-    // Update the uniform color
-    float timeValue = glfwGetTime();
-    float redValue = (sin(timeValue) / 2.0f) + 0.5f;
-    float greenValue = (sin(timeValue / 3.0f) / 2.0f) + 0.5f;
-    float blueValue = (sin(timeValue * 2.0f / 3.0f) / 2.0f) + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
     // Render the triangle
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);

@@ -1,20 +1,5 @@
 # ninja log v6
-27	633	1739804044038041463	CMakeFiles/OpenGL-Project.dir/src/glad.c.o	bc8c05b3ae9c3151
-2890	3074	1739804046901239067	OpenGL-Project	d8bbaa5cc5cfde51
-26	2793	1739804044036465171	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-27	2890	1739804044038235458	CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o	63d79a8eeaaa2197
-2000	2134	1739782019111887346	OpenGL-Project.app/Contents/MacOS/OpenGL-Project	29836041af6248dd
-10	2240	1739887714295035606	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-2240	2390	1739887716524822814	OpenGL-Project	d8bbaa5cc5cfde51
-8	649	1739887849659782918	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-649	765	1739887850300589912	OpenGL-Project	d8bbaa5cc5cfde51
-26	743	1739889164627955407	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-743	876	1739889165345248650	OpenGL-Project	d8bbaa5cc5cfde51
-24	661	1739889660265507753	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-661	778	1739889660902649573	OpenGL-Project	d8bbaa5cc5cfde51
-8	458	1739889731436267978	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-458	509	1739889731886594667	OpenGL-Project	d8bbaa5cc5cfde51
-7	448	1739889751454122365	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-448	496	1739889751895446172	OpenGL-Project	d8bbaa5cc5cfde51
-9	641	1739889910381295986	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
-642	757	1739889911013779847	OpenGL-Project	d8bbaa5cc5cfde51
+4	461	1739894578182179125	CMakeFiles/OpenGL-Project.dir/src/glad.c.o	bc8c05b3ae9c3151
+786	924	1739894578964424445	OpenGL-Project	d8bbaa5cc5cfde51
+3	721	1739894578181136477	CMakeFiles/OpenGL-Project.dir/src/main.cpp.o	e2951d0d1238e749
+4	786	1739894578182388830	CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o	63d79a8eeaaa2197

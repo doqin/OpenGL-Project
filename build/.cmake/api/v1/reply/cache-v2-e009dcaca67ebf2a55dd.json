@@ -611,7 +611,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/local/bin/ninja"
+			"value" : "/opt/homebrew/bin/ninja"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",

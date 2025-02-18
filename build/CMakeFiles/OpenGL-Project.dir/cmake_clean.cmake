@@ -5,7 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGL-Project.dir/src/main.cpp.o.d"
   "CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o"
   "CMakeFiles/OpenGL-Project.dir/src/readFile.cpp.o.d"
-  "OpenGL-Project.app/Contents/MacOS/OpenGL-Project"
+  "OpenGL-Project"
   "OpenGL-Project.pdb"
 )
 
