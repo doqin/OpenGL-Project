@@ -53,22 +53,56 @@ int main() {
     std::cout << "Failed to initialize GLAD\n";
   }
 
+  glEnable(GL_DEPTH_TEST);
+
   // Create shader program
   Shader glShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
 
   // Triangle's vertices
   float vertices[] = {
-    // positions                  // colors                   // texture coords
-    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,// top right
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// bottom left
-    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
-  };
-
-  // Indices of the vertices
-  unsigned int indices[] = {
-    0, 1, 3, // first triangle
-    1, 2, 3 // second triangle
+    // positions                      // texture coords
+    // Back side
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    // Front side
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    // Left side
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    // Right side
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    // Bottom side
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    // Top side
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
   };
 
   // 
@@ -111,22 +145,18 @@ int main() {
   // Free the image data
   stbi_image_free(data);
 
-  unsigned int VAO, VBO, EBO;
+  unsigned int VAO, VBO;
   // Generate 1 of the VAO
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   // Generate 1 of the VBO
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  // Generate 1 of the EBO
-  glGenBuffers(1, &EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
   // Copy the vertices to the buffer
   // GL_STATIC_DRAW means the data is set once and used many times
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   // Copy the indices to the buffer
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   // Position attribute
 
@@ -138,20 +168,42 @@ int main() {
   // Fifth parameter is the stride of the data, the space between consecutive vertex attributes 
   // (can use 0 to let OpenGL determine the stride)
   // Sixth parameter is the offset of the data
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
   glEnableVertexAttribArray(0);
 
+  /* Unused
   // Color attribute
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
+  */
 
   // Texture attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(2);
 
-  // Set OpenGL's viewport
-  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+  // Coordinate systems
+
+  // View matrix
+  glm::mat4 view = glm::mat4(1.0f);
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -8.0f)); // Moves the scene backward (moving the camera away)
+
+  // Projection matrix
+  glm::mat4 projection;
+  projection = glm::perspective(glm::radians(45.0f), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+
+  // Set uniforms
+  glShader.use();
+  glShader.setMat4("view", view);
+  glShader.setMat4("projection", projection);
+
+  // Instances of cube
+  glm::vec3 cubePositions[10];
+  for (unsigned int i = 0; i < 10; i++) {
+    cubePositions[i].x = (float) (rand() % 1000) / 100.0f - 5.0f;
+    cubePositions[i].y = (float) (rand() % 1000) / 100.0f - 5.0f;
+    cubePositions[i].z = (float) (rand() % 1000) / 100.0f - 5.0f;
+  }
 
   // 
   // Render loop
@@ -167,7 +219,7 @@ int main() {
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     // Specify what to clear
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Bind the texture
     glActiveTexture(GL_TEXTURE0);
@@ -176,21 +228,20 @@ int main() {
     // Use the shader program
     glShader.use();
     glShader.setInt("ourTexture", 0);
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::rotate(trans, (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    trans = glm::rotate(trans, (float)glfwGetTime() * 3.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniformMatrix4fv(
-      glGetUniformLocation(glShader.ID, "transform"), 
-      1, 
-      GL_FALSE, 
-      glm::value_ptr(trans));
 
     // Bind VAO to use the vertex data
     glBindVertexArray(VAO);
-    // Draw the triangle
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    for (unsigned int i = 0; i < 10; i++) {
+      // Model matrix
+      glm::mat4 model = glm::mat4(1.0f);
+      model = glm::translate(model, cubePositions[i]);
+      model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.0f) + i * glm::radians(45.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+      glShader.setMat4("model", model);
+
+      // Draw the triangle
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     // Check and call events and swap buffers
     glfwPollEvents();
