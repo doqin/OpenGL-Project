@@ -6,6 +6,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+// OpenGL math library
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <shader.hpp>
 #include <iostream>
 
@@ -147,6 +152,18 @@ int main() {
 
   // Set OpenGL's viewport
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+  // Transformation
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+  trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
+  glShader.use();
+  glUniformMatrix4fv(
+    glGetUniformLocation(glShader.ID, "transform"), 
+    1, 
+    GL_FALSE, 
+    glm::value_ptr(trans));
 
   // 
   // Render loop
