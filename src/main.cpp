@@ -15,7 +15,7 @@
 #include <iostream>
 
 const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_HEIGHT = 800;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -153,17 +153,6 @@ int main() {
   // Set OpenGL's viewport
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-  // Transformation
-  glm::mat4 trans = glm::mat4(1.0f);
-  trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-
-  glShader.use();
-  glUniformMatrix4fv(
-    glGetUniformLocation(glShader.ID, "transform"), 
-    1, 
-    GL_FALSE, 
-    glm::value_ptr(trans));
-
   // 
   // Render loop
   //
@@ -187,9 +176,11 @@ int main() {
     // Use the shader program
     glShader.use();
     glShader.setInt("ourTexture", 0);
-    trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    trans = glm::rotate(trans, (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    trans = glm::rotate(trans, (float)glfwGetTime() * 3.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     glUniformMatrix4fv(
       glGetUniformLocation(glShader.ID, "transform"), 
       1, 
