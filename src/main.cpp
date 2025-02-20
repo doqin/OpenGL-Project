@@ -226,11 +226,12 @@ int main() {
   objShader.setInt("ourTexture", 0);
   objShader.setMat4("projection", projection);
 
-  glm::vec3 cubePositions[10];
-  for (unsigned int i = 0; i < 10; i++) {
-    cubePositions[i].x = (float) (rand() % 1000) / 100.0f - 5.0f;
-    cubePositions[i].y = (float) (rand() % 1000) / 100.0f - 5.0f;
-    cubePositions[i].z = (float) (rand() % 1000) / 100.0f - 5.0f;
+  unsigned range = 40;
+  glm::vec3 cubePositions[40];
+  for (unsigned int i = 0; i < 40; i++) {
+    cubePositions[i].x = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
+    cubePositions[i].y = (float) (rand() % (range / 2) * 100) / 100.0f - (float) range / 4.0f;
+    cubePositions[i].z = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
   }
   objShader.setVec3("lightColor", lightColor);
   objShader.setVec3("lightPos", lightPos);
@@ -269,7 +270,7 @@ int main() {
     objShader.setInt("ourTexture", 0);
     view = glCamera.GetViewMatrix();
     objShader.setMat4("view", view);
-    for (unsigned int i = 0; i < 10; i++) {
+    for (unsigned int i = 0; i < 40; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
       float dx = cubePositions[i].x - lightPos.x;
