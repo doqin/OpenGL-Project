@@ -18,18 +18,35 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+// Mouse position
+float lastX = (float) SCR_HEIGHT / 2;
+float lastY = (float) SCR_WIDTH / 2;
+
+// Rotation values
+float yaw = -90.0f;
+float pitch = 0.0f;
+
+// Stops mouse jumping
+bool firstMouse = true;
+
 // Camera
+glm::vec3 direction = glm::vec3(
+  cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
+  sin(glm::radians(pitch)), 
+  sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
+glm::vec3 cameraFront = glm::normalize(direction);
+
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // Delta time
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
-void processInput(GLFWwindow* window);
+// Declarations
+void framebuffer_size_callback(GLFWwindow*, int, int);
+void mouse_callback(GLFWwindow*, double, double);
+void processInput(GLFWwindow*);
 
 int main() {
   // Set the function to flip the image vertically
@@ -53,6 +70,11 @@ int main() {
     glfwTerminate();
     return -1;
   }
+
+  // Setup mouse input
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, mouse_callback);
+
   // Get OpenGL context
   glfwMakeContextCurrent(window);
   // Frame buffer callback
@@ -278,6 +300,42 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+  if (firstMouse) {
+    lastX = xpos;
+    lastY = ypos;
+    firstMouse = false;
+  }
+
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+  lastX = xpos;
+  lastY = ypos;
+
+  const float sensitivity = 0.1f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+  yaw += xoffset;
+  pitch += yoffset;
+
+  const float constraintPos = 89.0f;
+  const float constraintNeg = -89.0f;
+
+  if (pitch > constraintPos) {
+    pitch = constraintPos;
+  }
+  if (pitch < constraintNeg) {
+    pitch = constraintNeg;
+  }
+
+  // Update camera direction
+  glm::vec3 direction = glm::vec3(
+    cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
+    sin(glm::radians(pitch)), 
+    sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
+  cameraFront = glm::normalize(direction);
 }
 
 void processInput(GLFWwindow* window) {
