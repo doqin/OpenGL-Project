@@ -80,7 +80,12 @@ int main() {
   glEnable(GL_DEPTH_TEST);
 
   // Create shader program
-  Shader glShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
+  std::cout << "\nSHADER: Creating Object shader program\n";
+  Shader objShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
+  std::cout << "\nSHADER: Creating Light shader program\n";
+  Shader lightShader("../src/shaders/light_shader.vert", "../src/shaders/light_shader.frag");
+  std::cout << "\nSHADER: Creating Light source program\n";
+  Shader lightSource("../src/shaders/light_source.vert", "../src/shaders/light_source.frag");
 
   // Triangle's vertices
   float vertices[] = {
@@ -169,42 +174,31 @@ int main() {
   // Free the image data
   stbi_image_free(data);
 
-  unsigned int VAO, VBO;
-  // Generate 1 of the VAO
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
+  unsigned int VBO;
   // Generate 1 of the VBO
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-  // Copy the vertices to the buffer
-  // GL_STATIC_DRAW means the data is set once and used many times
+  // Upload data to buffer
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  // Copy the indices to the buffer
 
-  // Position attribute
-
-  // Tell OpenGL how to interpret the vertex data
-  // First parameter is the location of the vertex attribute in the vertex shader (layout (location = 0))
-  // Second parameter is the size of the vertex attribute (vec3 has 3 values x, y, z so it is 3)
-  // Third parameter is the type of the data (vec* in GLSL consists of floats)
-  // Fourth parameter is whether the data should be normalized
-  // Fifth parameter is the stride of the data, the space between consecutive vertex attributes 
-  // (can use 0 to let OpenGL determine the stride)
-  // Sixth parameter is the offset of the data
+  unsigned int VAO;
+  // Generate 1 of the VAO
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+  
+  // Load attribute intepretation of previously bind VAO using vertex data from previously bind VBO
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
   glEnableVertexAttribArray(0);
-
-  /* Unused
-  // Color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
-  */
-
   // Texture attribute
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(2);
+
+  unsigned int lightVAO;
+  glGenVertexArrays(1, &lightVAO);
+  glBindVertexArray(lightVAO);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
 
   // Coordinate systems
 
@@ -216,10 +210,9 @@ int main() {
   projection = glm::perspective(glm::radians(glCamera.Zoom), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
   // Set uniforms
-  glShader.use();
-  glShader.setMat4("view", view);
-  glShader.setMat4("projection", projection);
-
+  // Setup Object shader
+  objShader.use();
+  objShader.setMat4("projection", projection);
   // Instances of cube
   glm::vec3 cubePositions[10];
   for (unsigned int i = 0; i < 10; i++) {
@@ -227,6 +220,26 @@ int main() {
     cubePositions[i].y = (float) (rand() % 1000) / 100.0f - 5.0f;
     cubePositions[i].z = (float) (rand() % 1000) / 100.0f - 5.0f;
   }
+  // Setup Light shader
+  lightShader.use();
+  lightShader.setMat4("projection", projection);
+  lightShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+  lightShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+  glm::vec3 cubePos;
+  cubePos.x = (float) (rand() % 1000) / 100.0f - 5.0f;
+  cubePos.y = (float) (rand() % 1000) / 100.0f - 5.0f;
+  cubePos.z = (float) (rand() % 1000) / 100.0f - 5.0f;
+  glm::mat4 model = glm::mat4(1.0f);
+  model = glm::translate(model, cubePos);
+  lightShader.setMat4("model", model);
+  // Setup Light source
+  lightSource.use();
+  lightSource.setMat4("projection", projection);
+  glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+  model = glm::mat4(1.0f);
+  model = glm::translate(model, lightPos);
+  model = glm::scale(model, glm::vec3(0.2f));
+  lightSource.setMat4("model", model);
 
   // 
   // Render loop
@@ -246,7 +259,8 @@ int main() {
     // Render commands
     //
 
-    glClearColor(0.1f, 0.1f, 0.8f, 1.0f);
+    // Sky color
+    glClearColor(0.53f, 0.80f, 0.8f, 0.92f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -254,27 +268,33 @@ int main() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    // Use the shader program
-    glShader.use();
-    glShader.setInt("ourTexture", 0);
-
-    // Update camera position
-    view = glCamera.GetViewMatrix();
-    glShader.setMat4("view", view);
-
-    // Bind VAO to use the vertex data
+    // Render kako cubes
     glBindVertexArray(VAO);
-
+    objShader.use();
+    objShader.setInt("ourTexture", 0);
+    view = glCamera.GetViewMatrix();
+    objShader.setMat4("view", view);
     for (unsigned int i = 0; i < 10; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.0f) + i * glm::radians(45.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-      glShader.setMat4("model", model);
+      objShader.setMat4("model", model);
 
-      // Draw the triangle
+      // Draw the cube
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+
+    // Render light source
+    lightSource.use();
+    lightSource.setMat4("view", view);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Render light affected cube
+    glBindVertexArray(lightVAO);
+    lightShader.use();
+    lightShader.setMat4("view", view);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Check and call events and swap buffers
     glfwPollEvents();

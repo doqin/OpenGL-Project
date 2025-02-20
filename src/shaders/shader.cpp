@@ -1,3 +1,4 @@
+#include "glad/glad.h"
 #include <shader.hpp>
 #include <fstream>
 #include <sstream>
@@ -28,7 +29,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\n";
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ:\nERROR: " << e.what() << std::endl;
     }
 
     const char* vShaderCode = vertexCode.c_str();
@@ -71,6 +72,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     if (!success) {
         glGetProgramInfoLog(ID, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << "\n";
+    } else {
+        std::cout << "SUCCESS::SHADER::PROGRAM::CREATED\n";
     }
 
     // Delete the shaders as they're linked into our program now and no longer necessary
@@ -96,6 +99,10 @@ void Shader::setInt(const std::string& name, int value) const {
 
 void Shader::setFloat(const std::string& name, float value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::setVec3(const std::string& name, float x, float y, float z) const {
+    glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 }
 
 void Shader::setMat4(const std::string& name, glm::mat4 value) const {
