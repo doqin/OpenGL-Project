@@ -82,56 +82,55 @@ int main() {
   // Create shader program
   std::cout << "\nSHADER: Creating Object shader program\n";
   Shader objShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
-  std::cout << "\nSHADER: Creating Light shader program\n";
-  Shader lightShader("../src/shaders/light_shader.vert", "../src/shaders/light_shader.frag");
   std::cout << "\nSHADER: Creating Light source program\n";
   Shader lightSource("../src/shaders/light_source.vert", "../src/shaders/light_source.frag");
+  std::cout << std::endl;
 
   // Triangle's vertices
   float vertices[] = {
-    // positions                      // texture coords
+    // positions                      // texture coords   // normal vectors
     // Back side
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
     // Front side
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
     // Left side
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
     // Right side
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
     // Bottom side
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
     // Top side
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
   };
 
   // 
@@ -185,21 +184,18 @@ int main() {
   // Generate 1 of the VAO
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
-  
   // Load attribute intepretation of previously bind VAO using vertex data from previously bind VBO
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-  // Enable the vertex attribute with location 0, the vertex attribute is disabled by default
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
-  // Texture attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(2);
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
 
   unsigned int lightVAO;
   glGenVertexArrays(1, &lightVAO);
   glBindVertexArray(lightVAO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
-
   // Coordinate systems
 
   // View matrix
@@ -210,36 +206,33 @@ int main() {
   projection = glm::perspective(glm::radians(glCamera.Zoom), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
   // Set uniforms
+  // Setup Light source
+  glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+  lightSource.use();
+  lightSource.setMat4("projection", projection);
+
+  glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+  lightSource.setVec3("lightColor", lightColor);
+
+  glm::mat4 model = glm::mat4(1.0f);
+  model = glm::translate(model, lightPos);
+  model = glm::scale(model, glm::vec3(0.2f));
+  lightSource.setMat4("model", model);
+
   // Setup Object shader
   objShader.use();
+  objShader.setInt("ourTexture", 0);
   objShader.setMat4("projection", projection);
-  // Instances of cube
+
   glm::vec3 cubePositions[10];
   for (unsigned int i = 0; i < 10; i++) {
     cubePositions[i].x = (float) (rand() % 1000) / 100.0f - 5.0f;
     cubePositions[i].y = (float) (rand() % 1000) / 100.0f - 5.0f;
     cubePositions[i].z = (float) (rand() % 1000) / 100.0f - 5.0f;
   }
-  // Setup Light shader
-  lightShader.use();
-  lightShader.setMat4("projection", projection);
-  lightShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-  lightShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-  glm::vec3 cubePos;
-  cubePos.x = (float) (rand() % 1000) / 100.0f - 5.0f;
-  cubePos.y = (float) (rand() % 1000) / 100.0f - 5.0f;
-  cubePos.z = (float) (rand() % 1000) / 100.0f - 5.0f;
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, cubePos);
-  lightShader.setMat4("model", model);
-  // Setup Light source
-  lightSource.use();
-  lightSource.setMat4("projection", projection);
-  glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-  model = glm::mat4(1.0f);
-  model = glm::translate(model, lightPos);
-  model = glm::scale(model, glm::vec3(0.2f));
-  lightSource.setMat4("model", model);
+  objShader.setVec3("lightColor", lightColor);
+  objShader.setVec3("lightPos", lightPos);
+  objShader.setVec3("viewPos", glCamera.Position);
 
   // 
   // Render loop
@@ -260,7 +253,8 @@ int main() {
     //
 
     // Sky color
-    glClearColor(0.53f, 0.80f, 0.8f, 0.92f);
+    // glClearColor(0.53f, 0.80f, 0.8f, 0.92f); // natural sky blue
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -280,7 +274,7 @@ int main() {
       model = glm::translate(model, cubePositions[i]);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.0f) + i * glm::radians(45.0f), glm::vec3(1.0f, 0.3f, 0.5f));
       objShader.setMat4("model", model);
-
+      objShader.setVec3("viewPos", glCamera.Position);
       // Draw the cube
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
@@ -288,12 +282,6 @@ int main() {
     // Render light source
     lightSource.use();
     lightSource.setMat4("view", view);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Render light affected cube
-    glBindVertexArray(lightVAO);
-    lightShader.use();
-    lightShader.setMat4("view", view);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Check and call events and swap buffers
