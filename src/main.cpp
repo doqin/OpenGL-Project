@@ -1,4 +1,6 @@
 // OpenGL headers
+#include "glm/detail/type_vec.hpp"
+#include "glm/gtc/quaternion.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -250,8 +252,7 @@ int main() {
 
     //
     // Render commands
-    //
-
+    // --------------
     // Sky color
     // glClearColor(0.53f, 0.80f, 0.8f, 0.92f); // natural sky blue
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -271,7 +272,13 @@ int main() {
     for (unsigned int i = 0; i < 10; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
-      model = glm::translate(model, cubePositions[i]);
+      float dx = cubePositions[i].x - lightPos.x;
+      float dy = cubePositions[i].y - lightPos.y;
+      float dz = cubePositions[i].z - lightPos.z;
+      glm::vec3 point(dx, dy, dz);
+      glm::quat rotation = glm::angleAxis((float)glfwGetTime() * glm::radians(20.0f + i), glm::vec3(0.0f, 1.0f, 0.0f));
+      point = rotation * point;
+      model = glm::translate(model, point + lightPos);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.0f) + i * glm::radians(45.0f), glm::vec3(1.0f, 0.3f, 0.5f));
       objShader.setMat4("model", model);
       objShader.setVec3("viewPos", glCamera.Position);
