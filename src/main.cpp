@@ -30,6 +30,7 @@ float pitch = 0.0f;
 bool firstMouse = true;
 
 // Camera
+float fov = 45.0f;
 glm::vec3 direction = glm::vec3(
   cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
   sin(glm::radians(pitch)), 
@@ -46,6 +47,7 @@ float lastFrame = 0.0f;
 // Declarations
 void framebuffer_size_callback(GLFWwindow*, int, int);
 void mouse_callback(GLFWwindow*, double, double);
+void scroll_callback(GLFWwindow*, double, double);
 void processInput(GLFWwindow*);
 
 int main() {
@@ -74,6 +76,7 @@ int main() {
   // Setup mouse input
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetScrollCallback(window, scroll_callback);
 
   // Get OpenGL context
   glfwMakeContextCurrent(window);
@@ -222,7 +225,7 @@ int main() {
 
   // Projection matrix
   glm::mat4 projection;
-  projection = glm::perspective(glm::radians(45.0f), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(fov), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
   // Set uniforms
   glShader.use();
@@ -255,7 +258,7 @@ int main() {
     // Render commands
     //
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.8f, 1.0f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -338,6 +341,18 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
   cameraFront = glm::normalize(direction);
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+  fov -= (float)yoffset;
+  float constraintFloor = 1.0f;
+  float constraintCeiling = 45.0f;
+  if (fov < constraintFloor) {
+    fov = constraintFloor;
+  }
+  if (fov > constraintCeiling) {
+    fov = constraintCeiling;
+  }
+}
+
 void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -355,5 +370,11 @@ void processInput(GLFWwindow* window) {
   }
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
     cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
+  }
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    cameraPos += cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+  }
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+    cameraPos -= cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
   }
 }
