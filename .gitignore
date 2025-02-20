@@ -5,3 +5,6 @@
 *.lo
 *.o
 *.obj
+.clangd
+.cache/
+build/
