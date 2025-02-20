@@ -14,8 +14,18 @@
 #include <shader.hpp>
 #include <iostream>
 
+// Screen size
 const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// Camera
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+// Delta time
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -186,7 +196,7 @@ int main() {
 
   // View matrix
   glm::mat4 view = glm::mat4(1.0f);
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -8.0f)); // Moves the scene backward (moving the camera away)
+  view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
   // Projection matrix
   glm::mat4 projection;
@@ -210,6 +220,12 @@ int main() {
   //
 
   while(!glfwWindowShouldClose(window)) {
+
+    // Update delta time
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
     // Input
     processInput(window);
 
@@ -228,6 +244,10 @@ int main() {
     // Use the shader program
     glShader.use();
     glShader.setInt("ourTexture", 0);
+
+    // Update camera position
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glShader.setMat4("view", view);
 
     // Bind VAO to use the vertex data
     glBindVertexArray(VAO);
@@ -263,5 +283,19 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
+  }
+
+  const float cameraSpeed = 5.f * deltaTime;
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    cameraPos += cameraSpeed * cameraFront;
+  }
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    cameraPos -= cameraSpeed * cameraFront;
+  }
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    cameraPos -= cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
+  }
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
   }
 }
