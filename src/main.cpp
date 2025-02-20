@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <camera.hpp>
 #include <shader.hpp>
 #include <iostream>
 
@@ -22,27 +23,15 @@ const unsigned int SCR_HEIGHT = 600;
 float lastX = (float) SCR_HEIGHT / 2;
 float lastY = (float) SCR_WIDTH / 2;
 
-// Rotation values
-float yaw = -90.0f;
-float pitch = 0.0f;
-
 // Stops mouse jumping
 bool firstMouse = true;
-
-// Camera
-float fov = 45.0f;
-glm::vec3 direction = glm::vec3(
-  cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
-  sin(glm::radians(pitch)), 
-  sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
-glm::vec3 cameraFront = glm::normalize(direction);
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // Delta time
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+// Camera
+Camera glCamera;
 
 // Declarations
 void framebuffer_size_callback(GLFWwindow*, int, int);
@@ -220,12 +209,11 @@ int main() {
   // Coordinate systems
 
   // View matrix
-  glm::mat4 view = glm::mat4(1.0f);
-  view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+  glm::mat4 view = glCamera.GetViewMatrix();
 
   // Projection matrix
   glm::mat4 projection;
-  projection = glm::perspective(glm::radians(fov), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(glCamera.Zoom), (float) SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
   // Set uniforms
   glShader.use();
@@ -271,7 +259,7 @@ int main() {
     glShader.setInt("ourTexture", 0);
 
     // Update camera position
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    view = glCamera.GetViewMatrix();
     glShader.setMat4("view", view);
 
     // Bind VAO to use the vertex data
@@ -317,64 +305,33 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
   lastX = xpos;
   lastY = ypos;
 
-  const float sensitivity = 0.1f;
-  xoffset *= sensitivity;
-  yoffset *= sensitivity;
-  yaw += xoffset;
-  pitch += yoffset;
-
-  const float constraintPos = 89.0f;
-  const float constraintNeg = -89.0f;
-
-  if (pitch > constraintPos) {
-    pitch = constraintPos;
-  }
-  if (pitch < constraintNeg) {
-    pitch = constraintNeg;
-  }
-
-  // Update camera direction
-  glm::vec3 direction = glm::vec3(
-    cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
-    sin(glm::radians(pitch)), 
-    sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
-  cameraFront = glm::normalize(direction);
+  glCamera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-  fov -= (float)yoffset;
-  float constraintFloor = 1.0f;
-  float constraintCeiling = 45.0f;
-  if (fov < constraintFloor) {
-    fov = constraintFloor;
-  }
-  if (fov > constraintCeiling) {
-    fov = constraintCeiling;
-  }
+  glCamera.ProcessMouseScroll(yoffset);
 }
 
 void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
-
-  const float cameraSpeed = 5.f * deltaTime;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    cameraPos += cameraSpeed * cameraFront;
+    glCamera.ProcessKeyboard(FORWARD, deltaTime);
   }
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    cameraPos -= cameraSpeed * cameraFront;
+    glCamera.ProcessKeyboard(BACKWARD, deltaTime);
   }
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    cameraPos -= cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
+    glCamera.ProcessKeyboard(LEFT, deltaTime);
   }
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
+    glCamera.ProcessKeyboard(RIGHT, deltaTime);
   }
   if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-    cameraPos += cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+    glCamera.ProcessKeyboard(UP, deltaTime);
   }
   if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-    cameraPos -= cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+    glCamera.ProcessKeyboard(DOWN, deltaTime);
   }
 }

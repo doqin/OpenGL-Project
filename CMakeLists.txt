@@ -16,6 +16,7 @@ add_executable( ${PROJECT_NAME}
   src/main.cpp
   src/glad.c
   src/shaders/shader.cpp
+  src/camera.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
