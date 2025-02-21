@@ -31,7 +31,7 @@ void main() {
 
     vec3 lighting = ambient + diffuse + specular;
     vec4 texColor = texture(ourTexture, TexCoord);
-    vec4 result = vec4(lighting, 1.0) * texColor;
+    vec4 result = texColor * vec4(lighting, 1.0);
 
     FragColor = result;
 }

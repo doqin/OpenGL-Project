@@ -154,7 +154,7 @@ int main() {
   unsigned char* data = stbi_load("../asset/textures/kotori_pfp.png", &width, &height, &nrChannels, 0);
   
   if (data) {
-    std::cout << "Texture loaded successfully: " << width << "x" << height << " with " << nrChannels << " channels\n";
+    std::cout << "Texture loaded successfully: " << width << "x" << height << " with " << nrChannels << " channels\n\n";
     // Generate texture
     // Parameters:
     // 1. The texture target, GL_TEXTURE_2D is a 2D texture, any texture bound to this target will be a 2D texture
@@ -190,8 +190,9 @@ int main() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(1);
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+  glEnableVertexAttribArray(2);
 
   unsigned int lightVAO;
   glGenVertexArrays(1, &lightVAO);
@@ -223,6 +224,8 @@ int main() {
 
   // Setup Object shader
   objShader.use();
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
   objShader.setInt("ourTexture", 0);
   objShader.setMat4("projection", projection);
 
@@ -236,7 +239,6 @@ int main() {
   objShader.setVec3("lightColor", lightColor);
   objShader.setVec3("lightPos", lightPos);
   objShader.setVec3("viewPos", glCamera.Position);
-
   // 
   // Render loop
   //
@@ -260,16 +262,12 @@ int main() {
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Bind the texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     // Render kako cubes
     glBindVertexArray(VAO);
     objShader.use();
-    objShader.setInt("ourTexture", 0);
     view = glCamera.GetViewMatrix();
     objShader.setMat4("view", view);
+    // Bind the texture
     for (unsigned int i = 0; i < 40; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
