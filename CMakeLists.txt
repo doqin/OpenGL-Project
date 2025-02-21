@@ -31,6 +31,7 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 
+# Link libraries
 if (WIN32)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE ${LIBRARIES_DIR}/glfw3dll.lib
@@ -73,4 +74,29 @@ install(TARGETS ${PROJECT_NAME}
   BUNDLE DESTINATION build
   RUNTIME DESTINATION bin
 )
+
+# Include CPack to create a package
+
+# Configure CPack
+set(CPACK_PACKAGE_NAME "OpenGL-Project")
+set(CPACK_PACKAGE_VERSION "1.0")
+set(CPACK_PACKAGE_DESCRIPTION "Personal project for learning OpenGL")
+set(CPACK_PACKAGE_VENDOR "doquyen")
+set(CPACK_PACKAGE_CONTACT "business.doqin@gmail.com")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+set(CPACK_GENERATOR "ZIP")
+
+# Specify files to include in package
+if(WIN32)
+  install(FILES "${LIBRARIES_DIR}/glfw3.dll" DESTINATION bin)
+endif()
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/shaders" DESTINATION bin)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/asset" DESTINATION bin)
+
+# Create a README file
+file(WRITE "${CMAKE_BINARY_DIR}/README.md" "## OpenGL Project\n\n## How to Run\n\n1. Extract the ZIP file.\n2. Ensure \`glfw3.dll\` is in the same directory as \`OpenGL-Project.exe\`.\n3. Run \`OpenGL-Project.exe\`.\n\n## Requirements\n\n- Windows OS\n- OpenGL 3.3 or higher")
+install(FILES "${CMAKE_BINARY_DIR}/README.md" DESTINATION bin)
+
+# Include CPack
+include(CPack)
 
