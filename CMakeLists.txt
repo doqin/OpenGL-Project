@@ -4,6 +4,11 @@ OpenGL-Project VERSION 1.0
 DESCRIPTION "Personal project for learning OpenGL"
 LANGUAGES C CXX)
 
+if (WIN32)
+  set(CMAKE_C_COMPILER gcc)
+  set(CMAKE_CXX_COMPILER g++)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -23,9 +28,19 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
-)
+if (WIN32)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE ${LIBRARIES_DIR}/glfw3dll.lib
+  )
+elseif()
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
+  )
+else()
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE ${LIBRARIES_DIR}/libglfw3.so
+  )
+endif()
 
 if(APPLE AND CMAKE_BUILD_TYPE STREQUAL "Release")
   set_target_properties(${PROJECT_NAME}
@@ -38,7 +53,15 @@ if(MSVC)
     /W4>)
 else()
   target_compile_options(${PROJECT_NAME} PRIVATE
-    -Wall -Wextra -Wpedantic>)
+    -Wall -Wextra -Wpedantic)
+endif()
+
+# Copy glfw3.dll to the output directory
+if(WIN32)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${LIBRARIES_DIR}/glfw3.dll
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endif()
 
 

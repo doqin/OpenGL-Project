@@ -7,4 +7,5 @@
 *.obj
 .clangd
 .cache/
+.vscode/
 build/
