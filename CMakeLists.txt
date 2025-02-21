@@ -4,9 +4,12 @@ OpenGL-Project VERSION 1.0
 DESCRIPTION "Personal project for learning OpenGL"
 LANGUAGES C CXX)
 
-if (WIN32)
+if(WIN32)
   set(CMAKE_C_COMPILER gcc)
   set(CMAKE_CXX_COMPILER g++)
+elseif(APPLE)
+  set(CMAKE_C_COMPILER clang)
+  set(CMAKE_CXX_COMPILER clang++)
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
