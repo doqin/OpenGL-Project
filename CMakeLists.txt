@@ -36,7 +36,7 @@ if (WIN32)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE ${LIBRARIES_DIR}/glfw3dll.lib
   )
-elseif()
+elseif(APPLE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
   )
@@ -82,6 +82,20 @@ install(TARGETS ${PROJECT_NAME}
   BUNDLE DESTINATION build
   RUNTIME DESTINATION bin
 )
+
+# Copy shaders and assets to the app bundle's Resources directory
+if(APPLE)
+  set(RESOURCE_DIR "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources")
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${RESOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/shaders
+    ${RESOURCE_DIR}/shaders
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/assets
+    ${RESOURCE_DIR}/assets
+  )
+endif()
 
 # Include CPack to create a package
 
