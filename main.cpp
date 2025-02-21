@@ -83,9 +83,9 @@ int main() {
 
   // Create shader program
   std::cout << "\nSHADER: Creating Object shader program\n";
-  Shader objShader("../src/shaders/shader.vert", "../src/shaders/shader.frag");
+  Shader objShader("./shaders/shader.vert", "./shaders/shader.frag");
   std::cout << "\nSHADER: Creating Light source program\n";
-  Shader lightSource("../src/shaders/light_source.vert", "../src/shaders/light_source.frag");
+  Shader lightSource("./shaders/light_source.vert", "./shaders/light_source.frag");
   std::cout << std::endl;
 
   // Triangle's vertices
@@ -151,7 +151,7 @@ int main() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // linear interpolation
   // Load image
   int width, height, nrChannels;
-  unsigned char* data = stbi_load("../asset/textures/kotori_pfp.png", &width, &height, &nrChannels, 0);
+  unsigned char* data = stbi_load("./assets/textures/kotori_pfp.png", &width, &height, &nrChannels, 0);
   
   if (data) {
     std::cout << "Texture loaded successfully: " << width << "x" << height << " with " << nrChannels << " channels\n\n";

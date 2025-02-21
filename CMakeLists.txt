@@ -21,9 +21,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(LIBRARIES_DIR ${PROJECT_SOURCE_DIR}/lib)
 
 add_executable( ${PROJECT_NAME}
-  src/main.cpp
+  main.cpp
   src/glad.c
-  src/shaders/shader.cpp
+  src/shader.cpp
   src/camera.cpp
 )
 
@@ -67,6 +67,14 @@ if(WIN32)
     ${LIBRARIES_DIR}/glfw3.dll
     $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endif()
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${PROJECT_SOURCE_DIR}/shaders
+  $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${PROJECT_SOURCE_DIR}/assets
+  $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+)
 
 
 # Installation rules
@@ -90,8 +98,8 @@ set(CPACK_GENERATOR "ZIP")
 if(WIN32)
   install(FILES "${LIBRARIES_DIR}/glfw3.dll" DESTINATION bin)
 endif()
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/shaders" DESTINATION bin)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/asset" DESTINATION bin)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/shaders" DESTINATION bin)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets" DESTINATION bin)
 
 # Create a README file
 file(WRITE "${CMAKE_BINARY_DIR}/README.md" "## OpenGL Project\n\n## How to Run\n\n1. Extract the ZIP file.\n2. Ensure \`glfw3.dll\` is in the same directory as \`OpenGL-Project.exe\`.\n3. Run \`OpenGL-Project.exe\`.\n\n## Requirements\n\n- Windows OS\n- OpenGL 3.3 or higher")
