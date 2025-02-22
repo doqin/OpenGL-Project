@@ -101,7 +101,7 @@ endif()
 
 # Configure CPack
 set(CPACK_PACKAGE_NAME "OpenGL-Project")
-set(CPACK_PACKAGE_VERSION "1.0")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_DESCRIPTION "Personal project for learning OpenGL")
 set(CPACK_PACKAGE_VENDOR "doquyen")
 set(CPACK_PACKAGE_CONTACT "business.doqin@gmail.com")

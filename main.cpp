@@ -139,10 +139,10 @@ int main() {
   // Texture
   //
 
-  unsigned int texture;
-  glGenTextures(1, &texture);
+  unsigned int diffuseMap;
+  glGenTextures(1, &diffuseMap);
   // Bind the texture
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, diffuseMap);
   // Set the texture wrapping parameters
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -224,11 +224,6 @@ int main() {
 
   // Setup Object shader
   objShader.use();
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  objShader.setInt("ourTexture", 0);
-  objShader.setMat4("projection", projection);
-
   unsigned range = 40;
   glm::vec3 cubePositions[40];
   for (unsigned int i = 0; i < 40; i++) {
@@ -236,9 +231,20 @@ int main() {
     cubePositions[i].y = (float) (rand() % (range / 2) * 100) / 100.0f - (float) range / 4.0f;
     cubePositions[i].z = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
   }
-  objShader.setVec3("lightColor", lightColor);
-  objShader.setVec3("lightPos", lightPos);
+  objShader.setMat4("projection", projection);
+  objShader.setVec3("light.position", lightPos);
+  glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
+  objShader.setVec3("light.ambient", ambientColor);
+  glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+  objShader.setVec3("light.diffuse", diffuseColor);
+  objShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
   objShader.setVec3("viewPos", glCamera.Position);
+  objShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+  objShader.setInt("material.diffuse", 0);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, diffuseMap);
+  objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+  objShader.setFloat("material.shininess", 32.0f);
   // 
   // Render loop
   //
@@ -267,7 +273,6 @@ int main() {
     objShader.use();
     view = glCamera.GetViewMatrix();
     objShader.setMat4("view", view);
-    // Bind the texture
     for (unsigned int i = 0; i < 40; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
@@ -284,6 +289,12 @@ int main() {
       // Draw the cube
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
+    objShader.setMat4("model", model);
+    objShader.setVec3("viewPos", glCamera.Position);
+    glDrawArrays(GL_TRIANGLES, 30, 36);
 
     // Render light source
     lightSource.use();
