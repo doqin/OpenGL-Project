@@ -16,6 +16,7 @@
 #include <camera.hpp>
 #include <shader.hpp>
 #include <iostream>
+#include <sstream>
 
 // Screen size
 const unsigned int SCR_WIDTH = 800;
@@ -213,14 +214,7 @@ int main() {
   glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
   lightSource.use();
   lightSource.setMat4("projection", projection);
-
-  glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
   lightSource.setVec3("lightColor", lightColor);
-
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, lightPos);
-  model = glm::scale(model, glm::vec3(0.2f));
-  lightSource.setMat4("model", model);
 
   // Setup Object shader
   objShader.use();
@@ -235,15 +229,38 @@ int main() {
   objShader.setFloat("light.linear", 0.09f);
   objShader.setFloat("light.quadratic", 0.032f);
   objShader.setMat4("projection", projection);
-  objShader.setVec3("light.position", glm::vec3(-1.0f) * glCamera.Position);
-  objShader.setVec3("light.direction", glCamera.Front);
-  objShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-  objShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.0f)));
+
+  objShader.setVec3("dirLight.direction", 0.5f, -0.5f, 0.2f);
   glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
-  objShader.setVec3("light.ambient", ambientColor);
   glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-  objShader.setVec3("light.diffuse", diffuseColor);
-  objShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+  objShader.setVec3("dirLight.ambient", ambientColor);
+  objShader.setVec3("dirLight.diffuse", diffuseColor);
+  objShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+  glm::vec3 pointLightsPos[4];
+  for (int i = 0; i < 4; i++) {
+    float x = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
+    float y = (float) (rand() % (range / 2) * 100) / 100.0f - (float) range / 4.0f;
+    float z = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
+    pointLightsPos[i] = glm::vec3(x, y, z);
+    std::stringstream ss;
+    ss << "pointLights[" << i << "].";
+    std::string temp = ss.str();
+    temp += "position";
+    objShader.setVec3(temp, x, y, z);
+    temp = ss.str() + "constant";
+    objShader.setFloat(temp, 1.0f);
+    temp = ss.str() + "linear";
+    objShader.setFloat(temp, 0.09f);
+    temp = ss.str() + "quadratic";
+    objShader.setFloat(temp, 0.032f);
+    temp = ss.str() + "ambient";
+    objShader.setVec3(temp, ambientColor);
+    temp = ss.str() + "diffuse";
+    objShader.setVec3(temp, diffuseColor);
+    temp = ss.str() + "specular";
+    objShader.setVec3(temp, 1.0f, 1.0f, 1.0f);
+  }
+
   objShader.setVec3("viewPos", glCamera.Position);
   objShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
   objShader.setInt("material.diffuse", 0);
@@ -271,7 +288,7 @@ int main() {
     // --------------
     // Sky color
     // glClearColor(228.0f / 255.0f, 250.0f / 255.0f, 255.0f / 255.0f, 1.0f); // natural sky blue
-    glClearColor(0.1f, 0.1f, 0.1f, 0.2f);
+    glClearColor(0.9f, 0.9f, 1.0f, 1.0f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -282,19 +299,19 @@ int main() {
     objShader.setVec3("light.direction", glCamera.Front);
     view = glCamera.GetViewMatrix();
     objShader.setMat4("view", view);
+    objShader.setVec3("viewPos", glCamera.Position);
     for (unsigned int i = 0; i < 40; i++) {
       // Model matrix
       glm::mat4 model = glm::mat4(1.0f);
-      float dx = cubePositions[i].x - lightPos.x;
-      float dy = cubePositions[i].y - lightPos.y;
-      float dz = cubePositions[i].z - lightPos.z;
+      float dx = cubePositions[i].x - 0;
+      float dy = cubePositions[i].y - 0;
+      float dz = cubePositions[i].z - 0;
       glm::vec3 point(dx, dy, dz);
       glm::quat rotation = glm::angleAxis((float)glfwGetTime() * glm::radians(20.0f + i), glm::vec3(0.0f, 1.0f, 0.0f));
       point = rotation * point;
-      model = glm::translate(model, point + lightPos);
+      model = glm::translate(model, point + glm::vec3(0.0f, 0.0f, 0.0f));
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(55.0f) + i * glm::radians(45.0f), glm::vec3(1.0f, 0.3f, 0.5f));
       objShader.setMat4("model", model);
-      objShader.setVec3("viewPos", glCamera.Position);
       // Draw the cube
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
@@ -302,15 +319,17 @@ int main() {
     model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
     model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
     objShader.setMat4("model", model);
-    objShader.setVec3("viewPos", glCamera.Position);
     glDrawArrays(GL_TRIANGLES, 30, 36);
 
-    /*
     // Render light source
     lightSource.use();
     lightSource.setMat4("view", view);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    */
+    for (int i = 0; i < 4; i++) {
+      glm::mat4 model = glm::mat4(1.0f);
+      model = glm::translate(model, pointLightsPos[i]);
+      lightSource.setMat4("model", model);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     // Check and call events and swap buffers
     glfwPollEvents();
