@@ -231,8 +231,14 @@ int main() {
     cubePositions[i].y = (float) (rand() % (range / 2) * 100) / 100.0f - (float) range / 4.0f;
     cubePositions[i].z = (float) (rand() % range * 100) / 100.0f - (float) range / 2.0f;
   }
+  objShader.setFloat("light.constant", 1.0f);
+  objShader.setFloat("light.linear", 0.09f);
+  objShader.setFloat("light.quadratic", 0.032f);
   objShader.setMat4("projection", projection);
-  objShader.setVec3("light.position", lightPos);
+  objShader.setVec3("light.position", glm::vec3(-1.0f) * glCamera.Position);
+  objShader.setVec3("light.direction", glCamera.Front);
+  objShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+  objShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.0f)));
   glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
   objShader.setVec3("light.ambient", ambientColor);
   glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
@@ -245,6 +251,7 @@ int main() {
   glBindTexture(GL_TEXTURE_2D, diffuseMap);
   objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   objShader.setFloat("material.shininess", 32.0f);
+
   // 
   // Render loop
   //
@@ -263,14 +270,16 @@ int main() {
     // Render commands
     // --------------
     // Sky color
-    // glClearColor(0.53f, 0.80f, 0.8f, 0.92f); // natural sky blue
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // glClearColor(228.0f / 255.0f, 250.0f / 255.0f, 255.0f / 255.0f, 1.0f); // natural sky blue
+    glClearColor(0.1f, 0.1f, 0.1f, 0.2f);
     // Specify what to clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render kako cubes
     glBindVertexArray(VAO);
     objShader.use();
+    objShader.setVec3("light.position", glm::vec3(-1.0f) * glCamera.Position);
+    objShader.setVec3("light.direction", glCamera.Front);
     view = glCamera.GetViewMatrix();
     objShader.setMat4("view", view);
     for (unsigned int i = 0; i < 40; i++) {
@@ -296,10 +305,12 @@ int main() {
     objShader.setVec3("viewPos", glCamera.Position);
     glDrawArrays(GL_TRIANGLES, 30, 36);
 
+    /*
     // Render light source
     lightSource.use();
     lightSource.setMat4("view", view);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+    */
 
     // Check and call events and swap buffers
     glfwPollEvents();
