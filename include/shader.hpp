@@ -11,16 +11,16 @@ public:
     unsigned int ID;
 
     // Constructor reads and builds the shader
-    Shader(const char* vertexPath, const char* fragmentPath);
+    Shader(const char*, const char*);
     // Destructor
     ~Shader();
     // Use/activate the shader
     void use();
     // Utility uniform functions
-    void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
-    void setFloat(const std::string& name, float value) const;
-    void setVec3(const std::string& name, float x, float y, float z) const;
-    void setVec3(const std::string& name, glm::vec3 value) const;
-    void setMat4(const std::string& name, glm::mat4 value) const;
+    void setBool(const std::string&, bool) const;
+    void setInt(const std::string&, int) const;
+    void setFloat(const std::string&, float) const;
+    void setVec3(const std::string&, float, float, float) const;
+    void setVec3(const std::string&, glm::vec3) const;
+    void setMat4(const std::string&, glm::mat4) const;
 };

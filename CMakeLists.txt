@@ -25,6 +25,8 @@ add_executable( ${PROJECT_NAME}
   src/glad.c
   src/shader.cpp
   src/camera.cpp
+  src/mesh.cpp
+  src/model.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -39,6 +41,8 @@ if (WIN32)
 elseif(APPLE)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE ${LIBRARIES_DIR}/libglfw.3.dylib
+    PRIVATE ${LIBRARIES_DIR}/libassimp.5.dylib
+    PRIVATE ${LIBRARIES_DIR}/libassimp.dylib
   )
 else()
   target_link_libraries(${PROJECT_NAME}
