@@ -163,7 +163,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-
+    std::cout << "Loading texture at path: " << filename << std::endl;
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
@@ -171,6 +171,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data)
     {
+        std::cout << "Texture channel components: " << nrComponents << std::endl;
         GLenum format;
         if (nrComponents == 1)
             format = GL_RED;
@@ -189,11 +190,11 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
-        std::cout << "Texture successfully loaded at path: " << filename << std::endl;
+        std::cout << "Texture successfully loaded\n" << std::endl;
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << filename << std::endl;
+        std::cout << "Texture failed to load\n" << std::endl;
         stbi_image_free(data);
     }
 
